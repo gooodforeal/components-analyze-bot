@@ -1,0 +1,22 @@
+FROM python:3.11-slim
+
+WORKDIR /app
+
+# Установка Docker CLI для взаимодействия с контейнерами
+RUN apt-get update && \
+    apt-get install -y docker.io curl && \
+    apt-get clean && \
+    rm -rf /var/lib/apt/lists/*
+
+# Установка зависимостей
+COPY requirements.txt .
+RUN pip install --no-cache-dir -r requirements.txt
+
+# Копирование скриптов
+COPY telegram_bot.py .
+COPY bot_analyze_data.py .
+COPY .env .
+
+# Запуск бота
+CMD ["python", "telegram_bot.py"]
+
